@@ -1,12 +1,81 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import { withFormik, Form, Field } from "formik";
+//importing components from Formik
+import * as Yup from "yup";
+import "./styles.css";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+function App({ values, errors, touched }) {
+  // errors/ touched from Yup
+  return (
+    <Form //formik form has implementaion onChange and submit method
+    >
+      <div>
+        {errors.email && touched.email && <p>{errors.email}</p>}
+        <Field
+          type="email"
+          name="email"
+          placeholder="Email"
+          // value={values.email}
+          // onChange={handleChange}
+        />
+      </div>
+      <div>
+        {touched.password && errors.password && <p>{errors.password}</p>}
+        <Field
+          type="password"
+          name="password"
+          placeholder="Password"
+          //With field we can remove value for changes and hadler used for standard forms
+          // value={values.password}
+          // onChange={handleChange}
+        />
+      </div>
+      <label>
+        <Field type="checkbox" name="newsletter" checked={values.newsletter} />
+        Join newsletter
+      </label>
+      <Field component="select" name="plan">
+        <option value="free">Free</option>
+        <option value="premium">Premium</option>
+      </Field>
+      <button type="submit">Join </button>
+    </Form>
+  );
+}
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+const FormikApp = withFormik({
+  mapPropsToValues({ email, password, newsletter, plan }) {
+    //Deconstructing props to values for Formik
+    return {
+      email: email || "",
+      password: password || "",
+      newsletter: newsletter || true,
+      plan: plan || "free"
+    };
+  },
+  validationSchema: Yup.object().shape({
+    //validation provided by Yup
+    email: Yup.string()
+      .email("email valid required")
+      .required(),
+    password: Yup.string()
+      .min(4)
+      .required("Password is required")
+  }),
+
+  handleSubmit(values , { resetForm , setStatus , setSubmit} ) {
+      setTimeout(()=>{
+            if (values.email === 'rav260@wp.pl'){
+                setStatus({email: 'that email is already taken'})
+            }else {
+                resetForm({})
+            }
+            }, 2000)
+    //actions / dispatch / functions place here fro submitting form
+    console.log(values);
+  }
+})(App);
+
+const rootElement = document.getElementById("root");
+ReactDOM.render(<FormikApp email="" />, rootElement);
