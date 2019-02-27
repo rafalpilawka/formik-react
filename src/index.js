@@ -76,7 +76,7 @@ const FormikApp = withFormik({
             if (values.email === 'rav260@wp.pl'){
                 let mail = values.email
                 console.log(withFormik)
-                setValues({email: mail + "that email is already taken"})
+                setValues({email: mail + " that email is already taken"})
             }else {
                 resetForm()
             }
