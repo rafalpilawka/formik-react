@@ -8,9 +8,9 @@ import "./styles.css";
 function App({ values, errors, touched }) {
   // errors/ touched from Yup
   return (
-    <Form //formik form has implementaion onChange and submit method
+    <Form className="container row"//formik form has implementaion onChange and submit method
     >
-      <div>
+      <div className="col s6">
         {errors.email && touched.email && <p>{errors.email}</p>}
         <Field
           type="email"
@@ -20,7 +20,7 @@ function App({ values, errors, touched }) {
           // onChange={handleChange}
         />
       </div>
-      <div>
+      <div  className="col s6">
         {touched.password && errors.password && <p>{errors.password}</p>}
         <Field
           type="password"
@@ -32,14 +32,21 @@ function App({ values, errors, touched }) {
         />
       </div>
       <label>
-        <Field type="checkbox" name="newsletter" checked={values.newsletter} />
-        Join newsletter
+        <Field type="checkbox" className="filled-in" name="newsletter" checked={values.newsletter} />
+        <span>Join newsletter</span>
       </label>
-      <Field component="select" name="plan">
+      <div className="input-field col s12">
+
+       
+      <Field  className="input-field" component="select" name="plan">
+         
         <option value="free">Free</option>
         <option value="premium">Premium</option>
+       
       </Field>
-      <button type="submit">Join </button>
+     
+      </div>
+      <button className="btn  right" type="submit">Join </button>
     </Form>
   );
 }
@@ -64,14 +71,16 @@ const FormikApp = withFormik({
       .required("Password is required")
   }),
 
-  handleSubmit(values , { resetForm , setStatus , setSubmit} ) {
+  handleSubmit(values , { resetForm , setValues , setSubmit} ) {
       setTimeout(()=>{
             if (values.email === 'rav260@wp.pl'){
-                setStatus({email: 'that email is already taken'})
+                let mail = values.email
+                console.log(withFormik)
+                setValues({email: mail + "that email is already taken"})
             }else {
-                resetForm({})
+                resetForm()
             }
-            }, 2000)
+            }, 1000)
     //actions / dispatch / functions place here fro submitting form
     console.log(values);
   }
